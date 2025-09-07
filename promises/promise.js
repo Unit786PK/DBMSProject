@@ -1,5 +1,3 @@
-import { resolve } from "path"
-
 function first(){
     return Promise(resolve => resolve(`first Function`))
 
@@ -21,3 +19,4 @@ function third(){
 // })
 //     })
 
+first(()=> second(()=> third()))

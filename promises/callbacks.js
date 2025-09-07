@@ -13,8 +13,4 @@ function third(){
     console.log(`third Function`)
 }
 
-first(function(){
-    second(function(){
-        third()
-    })
-})
+first(()=> second(()=> third()))
