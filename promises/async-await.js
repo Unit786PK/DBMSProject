@@ -1,8 +1,8 @@
 function first(){
     console.log(`first Function`)
 }
-function second(){
-    fetch(`https://jsonplaceholder.typicode.com/users/1`) 
+async function second(){
+    await fetch(`https://jsonplaceholder.typicode.com/users/1`) 
     .then(res => res.json)
     .then(user => console.log(`second Function - ${user.name}`))
    
@@ -10,7 +10,8 @@ function second(){
 function third(){
     console.log(`third Function`)
 }
-
-first()
-second()
-third()
+(async()=>{
+    first();
+    await second();
+    third();
+})();

@@ -3,7 +3,7 @@ function first(callback){
     callback();
 }
 function second(callback){
-    fetch(`https://jsonplaceholder.typicode.com/todos/1`) 
+    fetch(`https://jsonplaceholder.typicode.com/users/1`) 
     .then(res => res.json())
     .then(user => console.log(`second Function - ${user.name}`))
    .then(()=> callback())
