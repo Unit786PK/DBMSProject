@@ -1,21 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="//unpkg.com/alpinejs" defer></script>
     <title>AlpineJS</title>
-</head>
-<body>
+    <script src="app.js"></script>
+    <style>
+        table, th, tr, td{
+            border-collapse: collapse;
+            border: 1px solid #808080
+        }
+        a:visited{
+            color: blue;
+        }
+    </style>
+  </head>
+  <body x-data="App()" x-init="getCountries()">
     <h1>Welcome to Alpine JS</h1>
+
+
+    <div style="display: flex; ">
+     <div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Region</th>
+            </tr>
+      <template x-for="country in countries">
+        <tr> 
+        <td x-text="country.country_id"></td>
+        <td>
+            <a href="#" x-text="country.country_name" @click="Detail(`${country.region_id}`)"></a>
+        </td>
+        <td x-text="country.region_id"></td>
+        
+        </tr>
+      </template>
+      </table>
+    </div>
+    <div x-show="Object.entries(region).length !== 0" style="margin-left: 10px;">
+        <table>
+            <tr>
+                <th>Id : </th>
+                <td x-text="region.region_id"></td>
+            </tr>
+            <tr>
+                <th>Name: </th>
+                <td x-text="region.region_name"></td>
+            </tr>
+        </table>
+    </div>
+    </div>
    
- 
-<div x-data="{ open: false }">
-    <button @click="open = true">Expand</button>
- 
-    <span x-show="open">
-        Content...
-    </span>
-</div>
-</body>
+  </body>
 </html>
