@@ -3,7 +3,7 @@ function first(){
 }
 async function second(){
     await fetch(`https://jsonplaceholder.typicode.com/users/1`) 
-    .then(res => res.json)
+    .then(res => res.json())
     .then(user => console.log(`second Function - ${user.name}`))
    
 }
