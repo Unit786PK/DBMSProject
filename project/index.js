@@ -1,16 +1,17 @@
 import express from "express";
+import path, {dirname} from "path";
+import {fileURLToPath} from 'url'
+import indexRouter from "./routes/index.js"
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.get(`/`, (req, res) => {
-  
-  res.json({ msg: `Hello World!` });
-});
+app.use(express.static(path.join(__dirname, "public")));
 
-app.get(`/data`, async(req, res) => {
-  const countries = await sql`SELECT * FROM countries;`
-  res.status(200).json(countries);
-  res.json({ msg: `Hello World!` });
-});
+app.get(`/`, (req, res) => res.sendFile(path.join(__dirname, "views/index.html")));
+app.use('/api', indexRouter);
+
+
 
 app.listen(PORT, ()=> console.log(`Server is listening on http://localhost:${PORT}`))
