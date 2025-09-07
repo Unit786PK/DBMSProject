@@ -4,55 +4,129 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="//unpkg.com/alpinejs" defer></script>
-    <title>AlpineJS</title>
+    <title>Student Datasheet</title>
     <script src="app.js"></script>
     <style>
-        table, th, tr, td{
-            border-collapse: collapse;
-            border: 1px solid #808080
-        }
-        a:visited{
-            color: blue;
-        }
+      table {
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+      table, th, td {
+        border: 1px solid #808080;
+        padding: 6px;
+      }
+      th {
+        background: #f0f0f0;
+        text-align: left;
+      }
+      button.student-link {
+        background: none;
+        border: none;
+        color: blue;
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 0;
+        font: inherit;
+      }
+      h1, h2, h3 {
+        margin: 0.5rem 0;
+      }
     </style>
   </head>
-  <body x-data="App()" x-init="getCountries()">
-    <h1>Welcome to Alpine JS</h1>
+  <body x-data="App()" x-init="getStudents()">
+    <h1>Student Datasheet</h1>
 
-
-    <div style="display: flex; ">
-     <div>
+    <div style="display: flex; gap: 2rem;">
+      <!-- Student List -->
+      <div>
+        <h2>Students</h2>
         <table>
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Region</th>
+              <th>Reg No</th>
+              <th>Name</th>
             </tr>
-      <template x-for="country in countries">
-        <tr> 
-        <td x-text="country.country_id"></td>
-        <td>
-            <a href="#" x-text="country.country_name" @click="Detail(`${country.region_id}`)"></a>
-        </td>
-        <td x-text="country.region_id"></td>
-        
-        </tr>
-      </template>
-      </table>
-    </div>
-    <div x-show="Object.entries(region).length !== 0" style="margin-left: 10px;">
-        <table>
-            <tr>
-                <th>Id : </th>
-                <td x-text="region.region_id"></td>
-            </tr>
-            <tr>
-                <th>Name: </th>
-                <td x-text="region.region_name"></td>
-            </tr>
+          </thead>
+          <tbody>
+            <template x-for="stu in students" :key="stu.regno">
+              <tr>
+                <td x-text="stu.regno"></td>
+                <td>
+                  <button type="button"
+                          class="student-link"
+                          x-text="stu.name"
+                          @click="Detail(stu.regno)">
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
         </table>
+      </div>
+
+    <!-- Student Detail -->
+<div x-show="student.regno" style="margin-left: 20px;">
+  <template x-if="loading">
+    <p>Loading student data...</p>
+  </template>
+
+  <template x-if="!loading && student.regno">
+    <div>
+      <h2>
+        Student: <span x-text="student.regno"></span> - 
+        <span x-text="student.name"></span>
+      </h2>
+
+      <!-- Courses Table -->
+      <h3>Courses & Grades</h3>
+      <table>
+        <tr>
+          <th>Course Code</th>
+          <th>Title</th>
+          <th>Marks</th>
+          <th>Max</th>
+          <th>%</th>
+          <th>Grade</th>
+          <th>GPA</th>
+          <th>Semester</th>
+        </tr>
+        <template x-for="(m, idx) in marks" :key="idx">
+
+          <tr>
+            <td x-text="m.course_code"></td>
+            <td x-text="m.course_title"></td>
+            <td x-text="m.earned_total"></td>
+            <td x-text="m.possible_total"></td>
+            <td x-text="m.percentage"></td>
+            <td x-text="m.grade"></td>
+            <td x-text="m.gpa"></td>
+            <td x-text="m.semester + ' ' + m.year"></td>
+          </tr>
+        </template>
+      </table>
+
+      <!-- Semester GPAs -->
+      <h3>Semester GPA</h3>
+      <table>
+        <tr>
+          <th>Semester</th>
+          <th>GPA</th>
+        </tr>
+        <template x-for="s in semesterGpas" :key="s.semester">
+          <tr>
+            <td x-text="s.semester"></td>
+            <td x-text="s.gpa"></td>
+          </tr>
+        </template>
+      </table>
+
+      <!-- CGPA -->
+      <h3>CGPA: <span x-text="cgpa"></span></h3>
     </div>
-    </div>
-   
+  </template>
+</div>
+
+
   </body>
 </html>
