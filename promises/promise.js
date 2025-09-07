@@ -1,16 +1,15 @@
-function first(){
-    return Promise(resolve => resolve(`first Function`))
-
+function first() {
+  return new Promise((resolve) => resolve(`first Function`));
 }
-function second(){
-    return Promise(resolve => 
-    fetch(`https://jsonplaceholder.typicode.com/todos/1`) 
-    .then(res => res.json())
-    .then(user => resolve(`second Function - ${user.name}`))
-    )
+function second() {
+  return new Promise((resolve) =>
+    fetch(`https://jsonplaceholder.typicode.com/users/1`)
+      .then((res) => res.json())
+      .then((user) => resolve(`second Function - ${user.name}`))
+  );
 }
-function third(){
-    return Promise (resolve => resolve(`third Function`))
+function third() {
+  return new Promise((resolve) => resolve(`third Function`));
 }
 
 // first(function(){
@@ -19,4 +18,10 @@ function third(){
 // })
 //     })
 
-first(()=> second(()=> third()))
+first()
+  .then(data => console.log(data))
+  .then(() =>
+    second()
+      .then(data => console.log(data))
+      .then(() => third().then(data => console.log(data)))
+  );
