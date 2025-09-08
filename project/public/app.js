@@ -5,7 +5,7 @@ function App(){
     marks: [],
     semesterGpas: [],
     cgpa: null,
-    loading: false,   // 👈 Add this line
+    loading: false, 
 
     async getStudents(){
       const response = await fetch(`/api/students`).then(res => res.json());
