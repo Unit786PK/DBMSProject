@@ -2,6 +2,20 @@ import express from "express"
 const router = express.Router();
 import {sql} from "../db.js"
 
+// small helper: fallback grade + gpa
+function calculateGradeAndGpa(percentage) {
+  if (percentage >= 90) return { grade: "A", gpa: 4.0 };
+  if (percentage >= 85) return { grade: "A-", gpa: 3.5 };
+  if (percentage >= 80) return { grade: "B+", gpa: 3.25 };
+  if (percentage >= 75) return { grade: "B", gpa: 3.0 };
+  if (percentage >= 70) return { grade: "C+", gpa: 2.5 };
+  if (percentage >= 65) return { grade: "C", gpa: 2.25 };
+  if (percentage >= 60) return { grade: "C-", gpa: 2.0 };
+  if (percentage >= 50) return { grade: "D", gpa: 1.0 };
+  return { grade: "F", gpa: 0 };
+}
+
+
 // get all students
 router.get(`/students`, async (req, res) => {
   const students = await sql`SELECT * FROM student;`
@@ -79,16 +93,24 @@ router.get(`/students/:regno/marks`, async (req, res) => {
     // load grading scale
     const gradeScale = await sql`SELECT * FROM grade ORDER BY gradeid;`;
 
-    // build per-course final rows (with grade & gpa)
     const courseRows = courses.map(row => {
       const earned_total = Number(row.earned_total);
       const possible_total = Number(row.possible_total);
       const percentage = possible_total === 0 ? 0 : (earned_total / possible_total) * 100;
-      const gradeRow = gradeScale.find(
-        g => percentage >= Number(g.start) && percentage <= Number(g["end"])
+
+      // try DB scale first
+      let gradeRow = gradeScale.find(
+        g => percentage >= Number(g.start) && percentage <= Number(g.end)
       );
-      const grade = gradeRow ? gradeRow.grade : null;
-      const gpa = gradeRow ? Number(gradeRow.gpa) : 0;
+      let grade = gradeRow ? gradeRow.grade : null;
+      let gpa = gradeRow ? Number(gradeRow.gpa) : 0;
+
+      // fallback if DB didn’t match
+      if (!gradeRow) {
+        const fallback = calculateGradeAndGpa(percentage);
+        grade = fallback.grade;
+        gpa = fallback.gpa;
+      }
       return {
         rid: row.rid,
         semester: row.semester,
